@@ -27,20 +27,21 @@ public class BeerController
   private final BeerService beerService;
 
   @GetMapping("/{beerId}")
-  public ResponseEntity<BeerDTO> getBeerById(@PathVariable("beerId") UUID beerId) {
-    return new ResponseEntity(beerService.getById(beerId), HttpStatus.OK);
+  public ResponseEntity<BeerDTO> getBeerById(@PathVariable("beerId") UUID beerId) throws NotFoundException {
+    return new ResponseEntity<>(beerService.getById(beerId), HttpStatus.OK);
   }
 
   @PostMapping
   public ResponseEntity saveNewBeer(@Valid @RequestBody BeerDTO beerDTO) {
 
-
-    return new ResponseEntity(beerService.saveNewBeer(beerDTO), HttpStatus.CREATED);
+    return new ResponseEntity<>(beerService.saveNewBeer(beerDTO), HttpStatus.CREATED);
   }
 
   @PutMapping("/{beerId}")
-  public ResponseEntity updateBeerById(@PathVariable("beerId") UUID beerId, @Valid @RequestBody BeerDTO beerDTO) {
+  public ResponseEntity updateBeerById(@PathVariable("beerId") UUID beerId, @Valid @RequestBody BeerDTO beerDTO)
+      throws NotFoundException
+  {
 
-    return new ResponseEntity(beerService.updateBeer(beerId, beerDTO), HttpStatus.NO_CONTENT);
+    return new ResponseEntity<>(beerService.updateBeer(beerId, beerDTO), HttpStatus.NO_CONTENT);
   }
 }

@@ -6,9 +6,9 @@ import com.ms.msscbeerservice.domain.Beer;
 import com.ms.msscbeerservice.repositories.BeerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.stereotype.Component;
 
-@Component
+//This component was replaced by sql data script
+//@Component
 public class BeerLoader implements CommandLineRunner
 {
   public static final String BEER_1_UPC = "06312342134";

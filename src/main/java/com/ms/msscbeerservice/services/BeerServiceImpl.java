@@ -27,9 +27,16 @@ public class BeerServiceImpl
 
   @Override
   public BeerDTO getById(final UUID beerId, boolean showInventoryOnHands) throws NotFoundException {
-    return beerMapper.beerToBeerDTO(
-        beerRepository.findById(beerId).orElseThrow(NotFoundException::new)
-    );
+    if (showInventoryOnHands) {
+      return beerMapper.beerToBeerDTO(
+          beerRepository.findById(beerId).orElseThrow(NotFoundException::new)
+      );
+    }
+    else {
+      return beerMapper.beerToBeerDTOWithInventory(
+          beerRepository.findById(beerId).orElseThrow(NotFoundException::new)
+      );
+    }
   }
 
   @Override
@@ -75,13 +82,6 @@ public class BeerServiceImpl
     }
     else {
       beerPage = beerRepository.findAll(pageRequest);
-    }
-
-    if (showInventoryOnHand) {
-
-    }
-    else {
-
     }
 
     beerPagedList = new BeerPagedList(beerPage

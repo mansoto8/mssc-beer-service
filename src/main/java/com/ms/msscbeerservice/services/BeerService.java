@@ -4,6 +4,9 @@ import java.util.UUID;
 
 import com.ms.msscbeerservice.web.controller.NotFoundException;
 import com.ms.msscbeerservice.web.model.BeerDTO;
+import com.ms.msscbeerservice.web.model.BeerPagedList;
+import com.ms.msscbeerservice.web.model.BeerStyleEnum;
+import org.springframework.data.domain.PageRequest;
 
 public interface BeerService
 {
@@ -12,4 +15,6 @@ public interface BeerService
   BeerDTO saveNewBeer(BeerDTO beerDTO);
 
   BeerDTO updateBeer(UUID beerId, BeerDTO beerDTO) throws NotFoundException;
+
+  BeerPagedList listBeers(String beerName, BeerStyleEnum beerStyle, PageRequest pageRequest);
 }

@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Type;
 import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
@@ -30,6 +31,7 @@ public class Beer
   @Id
   @GeneratedValue(generator = "UUID")
   @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
+  @Type(type = "org.hibernate.type.UUIDCharType")
   @Column(length = 36, columnDefinition = "varchar", updatable = false, nullable = false)
   private UUID id;
 
@@ -50,5 +52,5 @@ public class Beer
   private BigDecimal price;
 
   private Integer minOnHand;
-  private Integer quantifyToBrew;
+  private Integer quantityToBrew;
 }

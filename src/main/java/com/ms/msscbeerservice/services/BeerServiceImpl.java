@@ -22,10 +22,11 @@ public class BeerServiceImpl
     implements BeerService
 {
   private final BeerRepository beerRepository;
+
   private final BeerMapper beerMapper;
 
   @Override
-  public BeerDTO getById(final UUID beerId) throws NotFoundException {
+  public BeerDTO getById(final UUID beerId, boolean showInventoryOnHands) throws NotFoundException {
     return beerMapper.beerToBeerDTO(
         beerRepository.findById(beerId).orElseThrow(NotFoundException::new)
     );
@@ -51,30 +52,49 @@ public class BeerServiceImpl
 
   @Override
   public BeerPagedList listBeers(
-      final String beerName, final BeerStyleEnum beerStyle, final PageRequest pageRequest)
+      final String beerName, final BeerStyleEnum beerStyle,
+      final PageRequest pageRequest, boolean showInventoryOnHand
+  )
   {
     BeerPagedList beerPagedList;
     Page<Beer> beerPage;
 
     String beerStyleString = (beerStyle == null) ? null : beerStyle.name();
 
-    if(!StringUtils.isEmpty(beerName) && !StringUtils.isEmpty(beerStyleString)) {
+    if (!StringUtils.isEmpty(beerName) && !StringUtils.isEmpty(beerStyleString)) {
       //search both
       beerPage = beerRepository.findAllByBeerNameAndBeerStyle(beerName, beerStyleString, pageRequest);
-    } else if(!StringUtils.isEmpty(beerName) && StringUtils.isEmpty(beerStyleString)) {
+    }
+    else if (!StringUtils.isEmpty(beerName) && StringUtils.isEmpty(beerStyleString)) {
       //search beer_service name
       beerPage = beerRepository.findAllByBeerName(beerName, pageRequest);
-    }  else if(!StringUtils.isEmpty(beerName) && StringUtils.isEmpty(beerStyleString)) {
+    }
+    else if (!StringUtils.isEmpty(beerName) && StringUtils.isEmpty(beerStyleString)) {
       //search beer_service style
       beerPage = beerRepository.findAllByBeerStyle(beerStyleString, pageRequest);
-    } else {
+    }
+    else {
       beerPage = beerRepository.findAll(pageRequest);
+    }
+
+    if (showInventoryOnHand) {
+
+    }
+    else {
+
     }
 
     beerPagedList = new BeerPagedList(beerPage
         .getContent()
         .stream()
-        .map(beerMapper::beerToBeerDTO)
+        .map(beer -> {
+          if (showInventoryOnHand) {
+            return beerMapper.beerToBeerDTOWithInventory(beer);
+          }
+          else {
+            return beerMapper.beerToBeerDTO(beer);
+          }
+        })
         .collect(Collectors.toList()),
         PageRequest.of(
             beerPage.getPageable().getPageNumber(),

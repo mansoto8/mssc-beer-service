@@ -18,6 +18,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyBoolean;
 import static org.mockito.BDDMockito.given;
 
 @WebMvcTest(BeerController.class)
@@ -36,7 +37,7 @@ class BeerControllerTest
   void getBeerById() throws Exception {
     BeerDTO beerDTO = BeerDTO.builder().beerName("Corona")
         .beerStyle(BeerStyleEnum.GOSE).price(new BigDecimal(2000)).upc(BeerLoader.BEER_1_UPC).build();
-    given(beerService.getById(any())).willReturn(beerDTO);
+    given(beerService.getById(any(), anyBoolean())).willReturn(beerDTO);
 
     mockMvc.perform(MockMvcRequestBuilders
         .get("/api/v1/beer/" + UUID.randomUUID().toString())

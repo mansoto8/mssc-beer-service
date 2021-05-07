@@ -10,11 +10,15 @@ import org.springframework.data.domain.PageRequest;
 
 public interface BeerService
 {
-  BeerDTO getById(UUID beerId) throws NotFoundException;
+  BeerDTO getById(UUID beerId, boolean showInventoryOnHand) throws NotFoundException;
 
   BeerDTO saveNewBeer(BeerDTO beerDTO);
 
   BeerDTO updateBeer(UUID beerId, BeerDTO beerDTO) throws NotFoundException;
 
-  BeerPagedList listBeers(String beerName, BeerStyleEnum beerStyle, PageRequest pageRequest);
+  BeerPagedList listBeers(
+      String beerName,
+      BeerStyleEnum beerStyle,
+      PageRequest pageRequest,
+      boolean showInventoryOnHand);
 }

@@ -2,6 +2,7 @@ package com.ms.msscbeerservice.mappers;
 
 import com.ms.msscbeerservice.bootstrap.BeerLoader;
 import com.ms.msscbeerservice.domain.Beer;
+import com.ms.msscbeerservice.services.inventory.BeerInventoryService;
 import com.ms.msscbeerservice.web.model.BeerDTO;
 import com.ms.msscbeerservice.web.model.BeerStyleEnum;
 import org.junit.jupiter.api.Test;
@@ -10,11 +11,14 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.util.Assert;
 
-@SpringBootTest(classes = {BeerMapperImpl.class, DateMapper.class})
+@SpringBootTest(classes = {BeerMapperImpl_.class, DateMapper.class})
 class BeerMapperTest
 {
   @Autowired
   BeerMapper beerMapper;
+
+  @MockBean
+  BeerInventoryService beerInventoryService;
 
   @Test
   void beerToBeerDTO() {

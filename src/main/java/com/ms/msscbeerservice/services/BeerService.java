@@ -21,4 +21,6 @@ public interface BeerService
       BeerStyleEnum beerStyle,
       PageRequest pageRequest,
       boolean showInventoryOnHand);
+
+  BeerDTO getBeerByUpc(String beerUpc, boolean showInventoryOnHand) throws NotFoundException;;
 }

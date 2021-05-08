@@ -12,6 +12,7 @@ import com.ms.msscbeerservice.web.model.BeerPagedList;
 import com.ms.msscbeerservice.web.model.BeerStyleEnum;
 import io.micrometer.core.instrument.util.StringUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
@@ -25,6 +26,7 @@ public class BeerServiceImpl
 
   private final BeerMapper beerMapper;
 
+  @Cacheable(cacheNames = "beerCache", key = "#beerId", condition = "#showInventoryOnHand == false")
   @Override
   public BeerDTO getById(final UUID beerId, boolean showInventoryOnHands) throws NotFoundException {
     if (showInventoryOnHands) {
@@ -57,6 +59,8 @@ public class BeerServiceImpl
     return beerMapper.beerToBeerDTO(beerRepository.save(beer));
   }
 
+  //In this case spring will generate the key
+  @Cacheable(cacheNames = "beerListCache", condition = "#showInventoryOnHand == false")
   @Override
   public BeerPagedList listBeers(
       final String beerName, final BeerStyleEnum beerStyle,
@@ -103,5 +107,20 @@ public class BeerServiceImpl
     );
 
     return beerPagedList;
+  }
+
+  @Cacheable(cacheNames = "beerUpc", key = "#beerUpc", condition = "#showInventoryOnHand == false")
+  @Override
+  public BeerDTO getBeerByUpc(final String beerUpc, boolean showInventoryOnHand) throws NotFoundException {
+    if (!showInventoryOnHand) {
+      return beerMapper.beerToBeerDTO(
+          beerRepository.findByUpc(beerUpc).orElseThrow(NotFoundException::new)
+      );
+    }
+    else {
+      return beerMapper.beerToBeerDTOWithInventory(
+          beerRepository.findByUpc(beerUpc).orElseThrow(NotFoundException::new)
+      );
+    }
   }
 }
